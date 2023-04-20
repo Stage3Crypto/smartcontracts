@@ -13,19 +13,19 @@ contract NootInASuit is ERC721, Ownable {
 
     uint256 private _tokenIdCounter = 1;
     uint256 private constant _maxTokens = 128;
-    string private constant _baseTokenURI = "Base_URI";
+    string private constant _baseTokenURI = "https://nftstorage.link/ipfs/bafybeialb6tmzjibudsvtsxdwewvyrtvyuvgkoxqxk3jy25qblhjkht2zu/";
 
-    constructor() ERC721("Name", "Symbol") {
+    constructor() ERC721("Noot in a Suit", "NiaS") {
     }
 
     function mint(uint256 quantity) public onlyOwner {
         require(_tokenIdCounter + quantity <= _maxTokens + 1, "Exceeds maximum tokens available for minting");
         
-        _safeMint(msg.sender, 1);// mints token1 
+        _safeMint(msg.sender, 1);
 
-        for (uint256 i = 0; i < (quantity - 1); i++) {// stops minting before going one over 
-            _tokenIdCounter++;//called first to increment the token counter 
-            _safeMint(msg.sender, _tokenIdCounter);// mints tokens            
+        for (uint256 i = 0; i < (quantity - 1); i++) {
+            _tokenIdCounter++;
+            _safeMint(msg.sender, _tokenIdCounter);            
         }
     }
 
