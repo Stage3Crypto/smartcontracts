@@ -1,40 +1,35 @@
-//Kyle Sponable
-//CTO & Co-Founder 
-//Stage3crypto.com
-//This smart contract mints NOOTS!!!! 
+// Kyle Sponable
+// CTO & Co-Founder
+// Stage3crypto.com
+// This smart contract mints NOOTS!!!! 128 Noot In A Suit Noots!!!
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NootTest is ERC721, ERC721URIStorage, Ownable {
-    constructor() ERC721("NootTest", "NoTT") {}
+contract NootInASuit is ERC721, Ownable {
 
-      function mint(uint256 quantity) onlyOwner external payable {
-        // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`.
-      
-        _mint(msg.sender, quantity);
+    uint256 private _tokenIdCounter = 1;
+    uint256 private constant _maxTokens = 128;
+    string private constant _baseTokenURI = "Base_URI";
+
+    constructor() ERC721("Name", "Symbol") {
+    }
+
+    function mint(uint256 quantity) public onlyOwner {
+        require(_tokenIdCounter + quantity <= _maxTokens + 1, "Exceeds maximum tokens available for minting");
+        
+        _safeMint(msg.sender, 1);
+
+        for (uint256 i = 0; i < (quantity - 1); i++) {
+            _tokenIdCounter++;
+            _safeMint(msg.sender, _tokenIdCounter);            
+        }
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://nftstorage.link/ipfs/bafybeicdrlx4hkxpspak3bu73m5omlup7iyjqkf32mxhnnuub7uxahwquy";
-    } ipfs://bafybeicdrlx4hkxpspak3bu73m5omlup7iyjqkf32mxhnnuub7uxahwquy
-
-    // The following functions are overrides required by Solidity.
-
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
+        return _baseTokenURI;
     }
 }
-
